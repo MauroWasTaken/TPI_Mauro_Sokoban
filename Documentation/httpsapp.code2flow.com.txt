@@ -1,0 +1,57 @@
+///mouvements du personnage
+Instantiation du personnage;
+do
+{
+  if(il cours deja)
+  {
+    if(Est-il à la fin de son deplacement)
+    {
+      Arrete de ce déplacer;
+    }else{
+      Continue son Action;
+    }
+  }else{
+    Regarde les inputs de mouvement;
+    if(absolut(x)>absolut(y)){
+      le personnage se tourne dans le bon sens;
+      if(c'est un mouvement valable){
+        if(il y a une boite)Pousser la boite;
+        le personnage se deplace vers la valeur de X;
+      }
+    }else{
+      le personnage se tourne dans le bon sens;
+      if(c'est un mouvement valable){
+        if(il y a une boite)Pousser la boite;
+        le personnage se deplace vers la valeur de Y;
+      }
+    }
+  }
+}while(Le pesonnage est instancié)
+Suppresion du personnage;
+///Collisions personnage
+Le trigger est enclanché;
+if(le trigger est soit une boite ou un mur){
+  Garder le trigger dans la variable correspondant au coté ou il se trouve;
+}
+Fin de la methode;
+///mouvement des boites
+Instantiation de la boite;
+do
+{
+  if(il cours deja)
+  {
+    if(Est-il à la fin de son deplacement)
+    {
+      Arrete de ce déplacer;
+    }else{
+      Continue son Action;
+    }
+  }else{
+    if(Le personnage essaye de pousser la boite){
+      if(il y a rien dans la direction que la boite est poussée){
+        commencer le déplacement;
+      }
+    }
+  }
+}while(Le pesonnage est instancié)
+Suppresion du personnage;
