@@ -8,10 +8,9 @@ public class BoxCollisionScript : MonoBehaviour
     BoxScript box;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 7 | other.gameObject.layer == 8)
+        if (other.gameObject.layer >= 7)
         {
             box.AddCollision(this.gameObject.name, other.gameObject.layer);
-            //Debug.Log(box.gameObject.name+" - "+this.gameObject.name + " - " + other.gameObject.layer);
         }
     }
 

@@ -14,8 +14,8 @@ TagManager:
   - Player
   - Box
   - Wall
-  - 
-  - 
+  - SpotLocator
+  - Teleporter
   - 
   - 
   - 

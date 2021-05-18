@@ -4,14 +4,36 @@ using UnityEngine;
 
 public class BoxScript : MonoBehaviour
 {
-    float movingTime = 0.20f;
+    char lastmove;
+    float movingTime = 0.30f;
     float movingTimer = 0;
     bool isMoving = false;
     float verticalInput = 0;
     float horizontalInput = 0;
     [SerializeField]
     List<GameObject> colliders = new List<GameObject>();
-    int northCollision=0, southCollision=0, westCollision=0, eastCollision=0;
+    [SerializeField]
+    List<Material> materials = new List<Material>();
+    int northCollision = 0, southCollision = 0, westCollision = 0, eastCollision = 0, upCollision=0;
+    int UpCollision
+    {
+        get { return upCollision; }
+        set
+        {
+            if (value == 9)
+            {
+                this.gameObject.GetComponent<MeshRenderer>().material = materials[1];
+            }
+            else
+            {
+                this.gameObject.GetComponent<MeshRenderer>().material = materials[0];
+            }
+            upCollision = value;
+        }
+    }
+
+    public char Lastmove { get => lastmove; set => lastmove = value; }
+
     void Update()
     {
         Mouvement();
@@ -38,56 +60,59 @@ public class BoxScript : MonoBehaviour
         {
             collider.SetActive(status);
         }
-        if (!status)
-        {
-            northCollision = 0;
-            southCollision = 0;
-            westCollision = 0;
-            eastCollision = 0;
-        }
+        northCollision = 0;
+        southCollision = 0;
+        westCollision = 0;
+        eastCollision = 0;
+        UpCollision = 0;
+
     }
     public bool Push(string direction)
     {
         switch (direction)
         {
             case "North":
-                if (northCollision == 0)
+                if (northCollision == 0 | northCollision == 10)
                 {
                     verticalInput = 1;
                     horizontalInput = 0;
                     isMoving = true;
                     movingTimer = 0;
                     SetColliders(false);
+                    Lastmove = 'N';
                 }
                 break;
             case "South":
-                if (southCollision == 0)
+                if (southCollision == 0 | southCollision == 10)
                 {
                     verticalInput = -1;
                     horizontalInput = 0;
                     isMoving = true;
                     movingTimer = 0;
                     SetColliders(false);
+                    Lastmove = 'S';
                 }
                 break;
             case "West":
-                if (westCollision == 0)
+                if (westCollision == 0 | westCollision == 10)
                 {
                     verticalInput = 0;
                     horizontalInput = 1;
                     isMoving = true;
                     movingTimer = 0;
                     SetColliders(false);
+                    Lastmove = 'W';
                 }
                 break;
             case "East":
-                if (eastCollision == 0)
+                if (eastCollision == 0 | eastCollision == 10)
                 {
                     verticalInput = 0;
                     horizontalInput = -1;
                     isMoving = true;
                     movingTimer = 0;
                     SetColliders(false);
+                    Lastmove = 'E';
                 }
                 break;
         }
@@ -109,7 +134,12 @@ public class BoxScript : MonoBehaviour
             case "East":
                 eastCollision = item;
                 break;
+            case "Up":
+                if(item == 9)
+                {
+                    UpCollision = item;
+                }
+                break;
         }
-        Debug.Log(this.gameObject.name+" - " +side+ " - "+item);
     }
 }

@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class CharacterScript : MonoBehaviour
 {
+    char lastmove;
     Animator animator;
-    float runningTime = 0.25f;
+    float runningTime = 0.3f;
     float runningTimer = 0;
     bool isRunning = false;
     float verticalInput = 0;
@@ -13,6 +14,7 @@ public class CharacterScript : MonoBehaviour
     [SerializeField]
     List<GameObject> colliders = new List<GameObject>();
     Collider northCollision, southCollision, westCollision, eastCollision;
+    public char Lastmove { get => lastmove; }
     // Start is called before the first frame update
     void Start()
     {
@@ -53,7 +55,8 @@ public class CharacterScript : MonoBehaviour
                     {
                         verticalInput = 1;
                         horizontalInput = 0;
-                        validMove();
+                        validMove(); 
+                        lastmove = 'N';
                     }
                     else if (northCollision.gameObject.layer == 7)
                     {
@@ -62,6 +65,7 @@ public class CharacterScript : MonoBehaviour
                             verticalInput = 1;
                             horizontalInput = 0;
                             validMove();
+                            lastmove = 'N';
                         }
                     }
 
@@ -74,6 +78,7 @@ public class CharacterScript : MonoBehaviour
                         verticalInput = -1;
                         horizontalInput = 0;
                         validMove();
+                        lastmove = 'S';
                     }
                     else if (southCollision.gameObject.layer == 7)
                     {
@@ -82,6 +87,7 @@ public class CharacterScript : MonoBehaviour
                             verticalInput = -1;
                             horizontalInput = 0;
                             validMove();
+                            lastmove = 'S';
                         }
                     }
                 }
@@ -96,6 +102,7 @@ public class CharacterScript : MonoBehaviour
                         horizontalInput = -1;
                         verticalInput = 0;
                         validMove();
+                        lastmove = 'E';
                     }
                     else if (eastCollision.gameObject.layer == 7)
                     {
@@ -104,6 +111,7 @@ public class CharacterScript : MonoBehaviour
                             horizontalInput = -1;
                             verticalInput = 0;
                             validMove();
+                            lastmove = 'E';
                         }
                     }
                 }
@@ -115,6 +123,7 @@ public class CharacterScript : MonoBehaviour
                         horizontalInput = 1;
                         verticalInput = 0;
                         validMove();
+                        lastmove = 'W';
                     }
                     else if (westCollision.gameObject.layer == 7)
                     {
@@ -123,6 +132,7 @@ public class CharacterScript : MonoBehaviour
                             horizontalInput = 1;
                             verticalInput = 0;
                             validMove();
+                            lastmove = 'W';
                         }
                     }
                 }
@@ -137,6 +147,37 @@ public class CharacterScript : MonoBehaviour
         animator.SetTrigger("IsRunning");
         isRunning = true;
         runningTimer = 0;
+    }
+    public void Move(string direction)
+    {
+        switch (direction)
+        {
+            case "North":
+                verticalInput = 1;
+                horizontalInput = 0;
+                validMove();
+                lastmove = 'N';
+                break;
+            case "South":
+                verticalInput = -1;
+                horizontalInput = 0;
+                validMove();
+                lastmove = 'S';
+                break;
+            case "West":
+                horizontalInput = 1;
+                verticalInput = 0;
+                validMove();
+                lastmove = 'W';
+                break;
+            case "East":
+                horizontalInput = -1;
+                verticalInput = 0;
+                validMove();
+                lastmove = 'E';
+                break;
+        }
+
     }
     void SetColliders(bool status)
     {
