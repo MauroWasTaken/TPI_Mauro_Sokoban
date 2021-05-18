@@ -9,7 +9,7 @@ public class TeleporterScript : MonoBehaviour
     float cooldownTime = 0.3f;
     //TODO make accessor
     public float cooldownTimer= 0.3f;
-    public Collider northCollision, southCollision, westCollision, eastCollision;
+    Collider northCollision= null, southCollision = null, westCollision = null, eastCollision = null;
     void Update()
     {
         cooldownTimer += Time.deltaTime;
@@ -47,65 +47,79 @@ public class TeleporterScript : MonoBehaviour
         switch (direction)
         {
             case 'N':
-                if (destination.northCollision.gameObject.layer == 7) {
-                    if (item.layer == 6)
-                    {
-                        if (destination.northCollision.gameObject.GetComponent<BoxScript>().Push("North"))
-                        {
-                            teleportAvailable = "North";
-                        }
-                    }
-                }
-                else if (destination.northCollision.gameObject.layer != 8)
+                if (destination.northCollision == null)
                 {
                     teleportAvailable = "North";
                 }
-                break;
-            case 'S':
-                if (destination.southCollision.gameObject.layer == 7)
+                else
                 {
-                    if (item.layer == 6)
+                    if (destination.northCollision.gameObject.layer == 7)
                     {
-                        if (destination.southCollision.gameObject.GetComponent<BoxScript>().Push("South"))
+                        if (item.layer == 6)
                         {
-                            teleportAvailable = "South";
+                            if (destination.northCollision.gameObject.GetComponent<BoxScript>().Push("North"))
+                            {
+                                teleportAvailable = "North";
+                            }
                         }
                     }
                 }
-                else if (destination.southCollision.gameObject.layer != 8)
+                break;
+            case 'S':
+                if (destination.southCollision==null)
                 {
                     teleportAvailable = "South";
                 }
-                break;
-            case 'W':
-                if (destination.westCollision.gameObject.layer == 7)
+                else
                 {
-                    if (item.layer == 6)
+                    if (destination.southCollision.gameObject.layer == 7)
                     {
-                        if (destination.westCollision.gameObject.GetComponent<BoxScript>().Push("West"))
+                        if (item.layer == 6)
                         {
-                            teleportAvailable = "West";
+                            if (destination.southCollision.gameObject.GetComponent<BoxScript>().Push("South"))
+                            {
+                                teleportAvailable = "South";
+                            }
                         }
                     }
-                }else if (destination.westCollision.gameObject.layer != 8)
+                }
+                break;
+            case 'W':
+                if (destination.westCollision==null)
                 {
                     teleportAvailable = "West";
                 }
-                break;
-            case 'E':
-                if (destination.eastCollision.gameObject.layer == 7)
+                else
                 {
-                    if (item.layer == 6)
+                    if (destination.westCollision.gameObject.layer == 7)
                     {
-                        if (destination.eastCollision.gameObject.GetComponent<BoxScript>().Push("East"))
+                        if (item.layer == 6)
                         {
-                            teleportAvailable = "East";
+                            if (destination.westCollision.gameObject.GetComponent<BoxScript>().Push("West"))
+                            {
+                                teleportAvailable = "West";
+                            }
                         }
                     }
                 }
-                else if (destination.eastCollision.gameObject.layer != 8)
+                break;
+            case 'E':
+                if (destination.eastCollision==null)
                 {
                     teleportAvailable = "East";
+                }
+                else
+                {
+                    if (destination.eastCollision.gameObject.layer == 7)
+                    {
+                        if (item.layer == 6)
+                        {
+                            if (destination.eastCollision.gameObject.GetComponent<BoxScript>().Push("East"))
+                            {
+                                teleportAvailable = "East";
+                            }
+                        }
+                    }
                 }
                 break;
         }
@@ -190,16 +204,16 @@ public class TeleporterScript : MonoBehaviour
         switch (side)
         {
             case "North":
-                northCollision = new Collider();
+                northCollision = null;
                 break;
             case "South":
-                southCollision = new Collider();
+                southCollision = null;
                 break;
             case "West":
-                westCollision = new Collider();
+                westCollision = null;
                 break;
             case "East":
-                eastCollision = new Collider();
+                eastCollision = null;
                 break;
         }
     }
