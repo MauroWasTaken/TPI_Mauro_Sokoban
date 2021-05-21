@@ -6,7 +6,7 @@ public class CharacterScript : MonoBehaviour
 {
     char lastmove;
     Animator animator;
-    float runningTime = 0.3f;
+    float runningTime = 0.35f;
     float runningTimer = 0;
     bool isRunning = false;
     float verticalInput = 0;
@@ -15,10 +15,12 @@ public class CharacterScript : MonoBehaviour
     List<GameObject> colliders = new List<GameObject>();
     Collider northCollision, southCollision, westCollision, eastCollision;
     public char Lastmove { get => lastmove; }
+    GameManagerScript gameManager;
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
+        gameManager= GameObject.FindObjectOfType<GameManagerScript>();
     }
 
     // Update is called once per frame
@@ -147,6 +149,7 @@ public class CharacterScript : MonoBehaviour
         animator.SetTrigger("IsRunning");
         isRunning = true;
         runningTimer = 0;
+        //gameManager.AddMoveCounter();
     }
     public void Move(string direction)
     {

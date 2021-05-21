@@ -5,7 +5,7 @@ using UnityEngine;
 public class BoxScript : MonoBehaviour
 {
     char lastmove;
-    float movingTime = 0.30f;
+    float movingTime = 0.2f;
     float movingTimer = 0;
     bool isMoving = false;
     float verticalInput = 0;
@@ -114,6 +114,49 @@ public class BoxScript : MonoBehaviour
                     SetColliders(false);
                     Lastmove = 'E';
                 }
+                break;
+        }
+        return isMoving;
+    }
+    public bool ForcePush(string direction)
+    {
+        switch (direction)
+        {
+            case "North":
+                verticalInput = 1;
+                horizontalInput = 0;
+                isMoving = true;
+                movingTimer = 0;
+                SetColliders(false);
+                Lastmove = 'N';
+                break;
+            case "South":
+
+                verticalInput = -1;
+                horizontalInput = 0;
+                isMoving = true;
+                movingTimer = 0;
+                SetColliders(false);
+                Lastmove = 'S';
+                break;
+            case "West":
+
+                verticalInput = 0;
+                horizontalInput = 1;
+                isMoving = true;
+                movingTimer = 0;
+                SetColliders(false);
+                Lastmove = 'W';
+                break;
+            case "East":
+
+                verticalInput = 0;
+                horizontalInput = -1;
+                isMoving = true;
+                movingTimer = 0;
+                SetColliders(false);
+                Lastmove = 'E';
+
                 break;
         }
         return isMoving;

@@ -55,3 +55,29 @@ do
   }
 }while(Le pesonnage est instancié)
 Suppresion du personnage;
+///teleportation d'items
+Quand quelqu'un entre dans le teleporteur
+(Trigger est enclanché);
+if(si il y a quelque chose qu'empeche
+la teleportation de l'autre coté){
+  teleporter l'item et le 
+  deplacer encore une fois 
+}else{
+  if(c'est une boite){
+    la boite recule;
+  }
+  le joueur recule;
+}
+Fin de la methode;
+///instantiation de niveaux
+Le niveau doit etre instantié;
+instantiation d'un index x et y;
+while(il ya toujour des lignes
+items à instancier?){
+  while(il y a toujours des
+  items dans la ligne?){
+    instantier le bon item 
+    à la bonne place;
+  }
+}
+Fin de la methode;

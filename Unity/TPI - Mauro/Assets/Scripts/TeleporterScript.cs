@@ -20,7 +20,6 @@ public class TeleporterScript : MonoBehaviour
         {
             if (cooldownTime <= destination.cooldownTimer)
             {
-                Debug.LogWarning("TP " + other.gameObject.name);
                 Teleport(other.gameObject);
                 cooldownTimer = 0;
             }
@@ -132,52 +131,34 @@ public class TeleporterScript : MonoBehaviour
             }
             else
             {
-                item.GetComponent<BoxScript>().Push(teleportAvailable);
+                item.GetComponent<BoxScript>().ForcePush(teleportAvailable);
             }
         }
         else
         {
-            if (item.layer == 6)
+            string invertedDirection = InvertMouvement(GameObject.Find("character(Clone)").GetComponent<CharacterScript>().Lastmove);
+            if (item.layer == 7)
             {
-                item.GetComponent<CharacterScript>().Move(TestMouvement(item.GetComponent<CharacterScript>().Lastmove));
+                item.GetComponent<BoxScript>().ForcePush(invertedDirection);
+                
             }
-            else
-            {
-                item.GetComponent<BoxScript>().Push(TestMouvement(item.GetComponent<BoxScript>().Lastmove));
-                GameObject.Find("character").GetComponent<CharacterScript>().Move(TestMouvement(item.GetComponent<BoxScript>().Lastmove));
-            }
+            GameObject.Find("character(Clone)").GetComponent<CharacterScript>().Move(invertedDirection);
             return false;
         }
         return true;
     }
-    string TestMouvement(char direction)
+    string InvertMouvement(char direction)
     {
         switch (direction)
         {
             case 'N':
-                if (northCollision != null)
-                {
-                    return "South";
-                }
-                break;
+                return "South";
             case 'S':
-                if (southCollision != null)
-                {
-                    return "North";
-                }
-                break;
+                return "North";
             case 'W':
-                if (westCollision != null)
-                {
-                    return "East";
-                }
-                break;
+                return "East";
             case 'E':
-                if (eastCollision != null)
-                {
-                    return "West";
-                }
-                break;
+                return "West";
         }
         return "";
     }
@@ -215,6 +196,13 @@ public class TeleporterScript : MonoBehaviour
             case "East":
                 eastCollision = null;
                 break;
+        }
+    }
+    public void LinkToTeleporter(GameObject teleporter)
+    {
+        if (teleporter.layer == 10)
+        {
+            destination = teleporter.GetComponent<TeleporterScript>();
         }
     }
 }
