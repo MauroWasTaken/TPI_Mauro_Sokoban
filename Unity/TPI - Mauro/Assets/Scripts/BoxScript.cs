@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class BoxScript : MonoBehaviour
 {
+    GameManagerScript gameManager;
     char lastmove;
     float movingTime = 0.2f;
     float movingTimer = 0;
     bool isMoving = false;
     float verticalInput = 0;
     float horizontalInput = 0;
+    bool onspot = false;
     [SerializeField]
     List<GameObject> colliders = new List<GameObject>();
     [SerializeField]
@@ -23,17 +25,27 @@ public class BoxScript : MonoBehaviour
             if (value == 9)
             {
                 this.gameObject.GetComponent<MeshRenderer>().material = materials[1];
+                gameManager.BoxOnSpot(1);
+                onspot = true;
             }
             else
             {
-                this.gameObject.GetComponent<MeshRenderer>().material = materials[0];
+                if (onspot)
+                {
+                    this.gameObject.GetComponent<MeshRenderer>().material = materials[0];
+                    onspot = false;
+                    gameManager.BoxOnSpot(-1);
+                }
             }
             upCollision = value;
         }
     }
 
     public char Lastmove { get => lastmove; set => lastmove = value; }
-
+    void Start()
+    {
+        gameManager = GameObject.FindObjectOfType<GameManagerScript>();
+    }
     void Update()
     {
         Mouvement();
@@ -182,6 +194,24 @@ public class BoxScript : MonoBehaviour
                 {
                     UpCollision = item;
                 }
+                break;
+        }
+    }
+    public void RemoveCollision(string side)
+    {
+        switch (side)
+        {
+            case "North":
+                northCollision = 0;
+                break;
+            case "South":
+                southCollision = 0;
+                break;
+            case "West":
+                westCollision = 0;
+                break;
+            case "East":
+                eastCollision = 0;
                 break;
         }
     }

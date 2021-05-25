@@ -7,6 +7,7 @@ public class CharacterScript : MonoBehaviour
     char lastmove;
     Animator animator;
     float runningTime = 0.35f;
+    [SerializeField]
     float runningTimer = 0;
     bool isRunning = false;
     float verticalInput = 0;
@@ -20,32 +21,33 @@ public class CharacterScript : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        gameManager= GameObject.FindObjectOfType<GameManagerScript>();
+        gameManager = GameObject.FindObjectOfType<GameManagerScript>();
     }
 
     // Update is called once per frame
     void Update()
     {
         Mouvement();
+        runningTimer += Time.deltaTime;
     }
     void Mouvement()
     {
         if (isRunning)
         {
             transform.position = new Vector3(transform.position.x + verticalInput * Time.deltaTime / runningTime, transform.position.y, transform.position.z + horizontalInput * Time.deltaTime / runningTime);
-            if (runningTimer>runningTime*0.85)
+            if (runningTimer > runningTime * 0.85)
             {
                 SetColliders(true);
             }
 
             if (runningTime < runningTimer)
             {
-                transform.position = new Vector3(Mathf.Round(transform.position.x-0.5f)+0.5f, transform.position.y, Mathf.Round(transform.position.z / 0.5f) * 0.5f);
+                transform.position = new Vector3(Mathf.Round(transform.position.x - 0.5f) + 0.5f, transform.position.y, Mathf.Round(transform.position.z / 0.5f) * 0.5f);
                 isRunning = false;
                 SetColliders(true);
             }
         }
-        else
+        else if (runningTime < runningTimer)
         {
             float verticalAxis = Input.GetAxis("Vertical"), horizontalaxis = Input.GetAxis("Horizontal");
             if (Mathf.Abs(verticalAxis) > Mathf.Abs(horizontalaxis) & Mathf.Abs(verticalAxis) > 0.2)
@@ -57,7 +59,7 @@ public class CharacterScript : MonoBehaviour
                     {
                         verticalInput = 1;
                         horizontalInput = 0;
-                        validMove(); 
+                        validMove();
                         lastmove = 'N';
                     }
                     else if (northCollision.gameObject.layer == 7)
@@ -141,7 +143,6 @@ public class CharacterScript : MonoBehaviour
                 verticalInput = 0;
             }
         }
-        runningTimer += Time.deltaTime;
     }
     void validMove()
     {
@@ -184,7 +185,7 @@ public class CharacterScript : MonoBehaviour
     }
     void SetColliders(bool status)
     {
-        foreach(GameObject collider in colliders)
+        foreach (GameObject collider in colliders)
         {
             collider.SetActive(status);
         }
@@ -217,7 +218,7 @@ public class CharacterScript : MonoBehaviour
 
         }
         rotation = Mathf.RoundToInt((rotation + transform.localRotation.eulerAngles.y) / 90) * 90;
-        switch (rotation%360)
+        switch (rotation % 360)
         {
             case 270:
                 southCollision = item;

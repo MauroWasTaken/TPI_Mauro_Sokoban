@@ -8,15 +8,18 @@ public class GameManagerScript : MonoBehaviour
 {
     private int gameState = 2;
     [SerializeField]
-    GameObject gameCamera;
+    CameraScript gameCamera;
     //game variables
     private List<Level> levels = new List<Level>();
     private int movecounter = 0;
     private float timecounter = 0;
     private bool isPaused = false;
     private bool nextLevel = false;
+    private int spotsInLevel = 0;
+    private int boxesOnSpot = 0;
+
     //lvlmanager variables
-    private int levelSelected = 0;
+    private int levelSelected = 7;
     [SerializeField]
     private float transitionTime=2;
     private float transitionTimer;
@@ -33,23 +36,7 @@ public class GameManagerScript : MonoBehaviour
     void Start()
     {
         LoadLevels();
-        //levels.Add(new Level(testLvl()));
         InstantiateLevel();
-    }
-    List<List<string>> testLvl()
-    {
-        List<List<string>> result = new List<List<string>>();
-        List<string> testLine1 = new List<string>();
-        testLine1.Add("");
-        testLine1.Add("0");
-        testLine1.Add("1");
-        testLine1.Add("2");
-        testLine1.Add("3");
-        testLine1.Add("4");
-        testLine1.Add("");
-        result.Add(testLine1);
-        result.Add(testLine1);
-        return result;
     }
 
     /// <summary>
@@ -59,16 +46,25 @@ public class GameManagerScript : MonoBehaviour
     void Update()
     {
         UpdateGameState();
+        
     }
-    /// <summary>
-    /// 
-    /// state 1 
-    /// </summary>
-    /// <param name="stateToChange"></param>
     public void ChangeGameState(int stateToChange)
     {
+        gameCamera.Player = null;
+        GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+        foreach (GameObject singleObject in allObjects)
+        {
+            if (singleObject.name.Contains("character") | singleObject.name.Contains("Enemy") | singleObject.name.Contains("SpotLocator") | singleObject.name.Contains("Box") | singleObject.name.Contains("BrickWall") | singleObject.name.Contains("Teleporter"))
+            {
+                Destroy(singleObject);
+            }
+        }
         switch (stateToChange)
         {
+            case 2:
+                InstantiateLevel();
+                break;
+
             default:
                 break;
         }
@@ -78,7 +74,10 @@ public class GameManagerScript : MonoBehaviour
         switch (gameState)
         {
             case 2:
-                
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    ChangeGameState(2);
+                }
                 break;
         }
     }
@@ -94,6 +93,8 @@ public class GameManagerScript : MonoBehaviour
     void InstantiateLevel()
     {
         int x = 0, z = 0;
+        boxesOnSpot = 0;
+        spotsInLevel = 0;
         GameObject teleporter1 = null, teleporter2 = null;
         foreach (List<string> line in levels[levelSelected].LevelData)
         {
@@ -126,11 +127,13 @@ public class GameManagerScript : MonoBehaviour
                             break;
                         //greenpoint
                         case 4:
+                            spotsInLevel++;
                             gameObject.transform.position = new Vector3(-1 * (x + 0.5f), 0.5f, (z + 0.5f) * -1);
                             break;
                         //player
                         case 0:
                             gameObject.transform.position = new Vector3(-1 * (x + 0.5f), 0, (z + 0.5f) * -1);
+                            gameCamera.Player = gameObject;
                             break;
                     }
                 }
@@ -145,6 +148,9 @@ public class GameManagerScript : MonoBehaviour
             teleporter2.GetComponent<TeleporterScript>().LinkToTeleporter(teleporter1);
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
     void LoadLevels()
     {
         int levelindex = 0;
@@ -166,6 +172,22 @@ public class GameManagerScript : MonoBehaviour
             }
             levelindex++;
             levels.Add(new Level(formatedData));
+        }
+    }
+    public void BoxOnSpot(int value)
+    {
+        boxesOnSpot += value;
+        if (boxesOnSpot == spotsInLevel)
+        {
+            if (levelSelected < levels.Count - 1)
+            {
+                levelSelected++;
+                ChangeGameState(2);
+            }
+            else
+            {
+                ChangeGameState(3);
+            }
         }
     }
 }

@@ -13,5 +13,13 @@ public class BoxCollisionScript : MonoBehaviour
             box.AddCollision(this.gameObject.name, other.gameObject.layer);
         }
     }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer >= 7)
+        {
+            box.RemoveCollision(this.gameObject.name);
+
+        }
+    }
 
 }
