@@ -3,26 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Linq;
+using TMPro;
 
 public class GameManagerScript : MonoBehaviour
 {
-    private int gameState = 2;
+    private int gameState = 1;
     [SerializeField]
     CameraScript gameCamera;
-    //game variables
+    //UI elements
+    [SerializeField]
+    GameObject levelUi;
+    [SerializeField]
+    GameObject GameOverUi;
+    //game variables (gamestate 2)
     private List<Level> levels = new List<Level>();
     private int movecounter = 0;
     private float timecounter = 0;
     private bool isPaused = false;
-    private bool nextLevel = false;
     private int spotsInLevel = 0;
     private int boxesOnSpot = 0;
 
-    //lvlmanager variables
-    private int levelSelected = 7;
-    [SerializeField]
-    private float transitionTime=2;
-    private float transitionTimer;
+    //lvlmanager variables (gamestate 2)
+    private int levelSelected = -1;
+    private bool levelTransition = false;
+    private bool restartLevel = false;
+    private float transitionTimer=0;
     [SerializeField]
     private GameObject[] prefabs;
 
@@ -35,20 +40,35 @@ public class GameManagerScript : MonoBehaviour
     /// </summary>
     void Start()
     {
-        LoadLevels();
-        InstantiateLevel();
+        ChangeGameState(2);
     }
 
-    /// <summary>
-    /// fonction de base de unity qui est appelée à chaque image
-    /// appele la fonction qui gere le comportement du jeu
-    /// </summary>
-    void Update()
-    {
-        UpdateGameState();
-        
-    }
     public void ChangeGameState(int stateToChange)
+    {
+        clearGameObjects();
+        switch (stateToChange)
+        {
+            
+            case 2:
+                try
+                {
+                    LoadLevels();
+                    levelTransition = true;
+                }
+                catch (IOException)
+                {
+                    ChangeGameState(1);
+                }
+                break;
+            case 3:
+                GameOverUi.SetActive(true);
+                break;
+            default:
+                break;
+        }
+        gameState = stateToChange;
+    }
+    private void clearGameObjects()
     {
         gameCamera.Player = null;
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
@@ -59,15 +79,17 @@ public class GameManagerScript : MonoBehaviour
                 Destroy(singleObject);
             }
         }
-        switch (stateToChange)
-        {
-            case 2:
-                InstantiateLevel();
-                break;
-
-            default:
-                break;
-        }
+        levelUi.SetActive(false);
+        GameOverUi.SetActive(false);
+    }
+    /// <summary>
+    /// fonction de base de unity qui est appelée à chaque image
+    /// appele la fonction qui gere le comportement du jeu
+    /// </summary>
+    void Update()
+    {
+        UpdateGameState();
+        
     }
     private void UpdateGameState()
     {
@@ -76,10 +98,33 @@ public class GameManagerScript : MonoBehaviour
             case 2:
                 if (Input.GetKeyDown(KeyCode.R))
                 {
-                    ChangeGameState(2);
+                    restartLevel = true;
                 }
+                if (levelTransition)
+                {
+                    clearGameObjects();
+                    levelSelected++;
+                    levelUi.SetActive(true);
+                    GameObject.Find("LevelLable").GetComponent<TextMeshProUGUI>().text = "Level " + levelSelected;
+                    transitionTimer = 0;
+                    levelTransition = false;
+                }
+                if (levelUi.activeSelf & transitionTimer > 2)
+                {
+                    levelUi.SetActive(false);
+                    levelTransition = false;
+                    InstantiateLevel();
+                }
+                if (restartLevel)
+                {
+                    clearGameObjects();
+                    InstantiateLevel();
+                    restartLevel = false;
+                }
+                transitionTimer += Time.deltaTime;
                 break;
         }
+
     }
     public void AddMoveCounter()
     {
@@ -142,10 +187,18 @@ public class GameManagerScript : MonoBehaviour
             x++;
             z = 0;
         }
-        if(teleporter1 != null & teleporter2 != null)
+        if(teleporter1 != null)
         {
-            teleporter1.GetComponent<TeleporterScript>().LinkToTeleporter(teleporter2);
-            teleporter2.GetComponent<TeleporterScript>().LinkToTeleporter(teleporter1);
+            if(teleporter2 != null) 
+            {
+                teleporter1.GetComponent<TeleporterScript>().LinkToTeleporter(teleporter2);
+                teleporter2.GetComponent<TeleporterScript>().LinkToTeleporter(teleporter1);
+            }
+            else
+            {
+                teleporter1.GetComponent<TeleporterScript>().LinkToTeleporter(teleporter1);
+            }
+            
         }
     }
     /// <summary>
@@ -156,10 +209,10 @@ public class GameManagerScript : MonoBehaviour
         int levelindex = 0;
         while (File.Exists(levelindex + ".csv"))
         {
-            string data = File.ReadAllText(levelindex + ".csv");
-            string[] lines = data.Split("\n"[0]);
             List<List<string>> formatedData = new List<List<string>>();
             int index = 0;
+            string data = File.ReadAllText(levelindex + ".csv");
+            string[] lines = data.Split("\n"[0]);
             foreach (string line in lines)
             {
                 formatedData.Add(new List<string>());
@@ -170,6 +223,7 @@ public class GameManagerScript : MonoBehaviour
                 }
                 index++;
             }
+            
             levelindex++;
             levels.Add(new Level(formatedData));
         }
@@ -181,8 +235,7 @@ public class GameManagerScript : MonoBehaviour
         {
             if (levelSelected < levels.Count - 1)
             {
-                levelSelected++;
-                ChangeGameState(2);
+                levelTransition = true;
             }
             else
             {
