@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 using TMPro;
+using UnityEngine.UI;
 
 public class GameManagerScript : MonoBehaviour
 {
@@ -15,6 +16,18 @@ public class GameManagerScript : MonoBehaviour
     GameObject levelUi;
     [SerializeField]
     GameObject GameOverUi;
+    [SerializeField]
+    GameObject mainMenuUi;
+    [SerializeField]
+    GameObject pauseMenuUi;
+    //game UI
+    [SerializeField]
+    GameObject TimeLabelUi;
+    [SerializeField]
+    GameObject GameLevelLabelUi;
+    [SerializeField]
+    GameObject MovesLabelUi;
+
     //game variables (gamestate 2)
     private List<Level> levels = new List<Level>();
     private int movecounter = 0;
@@ -30,17 +43,30 @@ public class GameManagerScript : MonoBehaviour
     private float transitionTimer=0;
     [SerializeField]
     private GameObject[] prefabs;
-
+    //sound management
+    [SerializeField]
+    private AudioSource[] audioSources;
+    [SerializeField]
+    private AudioClip[] audioClips;
+    //getters
+    public bool RestartLevel { set { restartLevel = value; } }
     public int GameState { get => gameState; } 
     public bool IsPaused { get => isPaused; }
     public int LevelSelected { get => levelSelected; }
+
     /// <summary>
     /// fonction de base de unity qui est appelée quand l'objet player est instancié
     /// lance le menu principale
     /// </summary>
     void Start()
     {
-        ChangeGameState(2);
+        ChangeGameState(1);
+        int index = 0;
+        foreach(AudioSource audioSource in audioSources)
+        {
+            audioSources[index].clip = audioClips[index];
+            index++;
+        }
     }
 
     public void ChangeGameState(int stateToChange)
@@ -52,7 +78,10 @@ public class GameManagerScript : MonoBehaviour
             case 2:
                 try
                 {
+                    movecounter = 0;
+                    timecounter = 0;
                     LoadLevels();
+                    levelSelected = -1;
                     levelTransition = true;
                 }
                 catch (IOException)
@@ -64,12 +93,21 @@ public class GameManagerScript : MonoBehaviour
                 GameOverUi.SetActive(true);
                 break;
             default:
+                mainMenuUi.SetActive(true);
+                GameObject.Find("PlayButton").GetComponent<Button>().Select();
                 break;
         }
         gameState = stateToChange;
     }
     private void clearGameObjects()
     {
+        mainMenuUi.SetActive(false);
+
+        Time.timeScale = 1f;
+        isPaused = false;
+        pauseMenuUi.SetActive(false);
+
+
         gameCamera.Player = null;
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
         foreach (GameObject singleObject in allObjects)
@@ -100,12 +138,17 @@ public class GameManagerScript : MonoBehaviour
                 {
                     restartLevel = true;
                 }
+                if (Input.GetKeyDown(KeyCode.P))
+                {
+                    TogglePause();
+                }
                 if (levelTransition)
                 {
                     clearGameObjects();
                     levelSelected++;
                     levelUi.SetActive(true);
                     GameObject.Find("LevelLable").GetComponent<TextMeshProUGUI>().text = "Level " + levelSelected;
+                    GameLevelLabelUi.GetComponent<TextMeshProUGUI>().text = "Level : " + levelSelected;
                     transitionTimer = 0;
                     levelTransition = false;
                 }
@@ -119,9 +162,18 @@ public class GameManagerScript : MonoBehaviour
                 {
                     clearGameObjects();
                     InstantiateLevel();
+                    if (IsPaused) TogglePause();
                     restartLevel = false;
                 }
+                timecounter += Time.deltaTime;
+                TimeLabelUi.GetComponent<TextMeshProUGUI>().text = "Time : " + Mathf.Floor(timecounter) + " secs";
                 transitionTimer += Time.deltaTime;
+                break;
+            case 3:
+                if (Input.anyKeyDown)
+                {
+                    ChangeGameState(1);
+                }
                 break;
         }
 
@@ -129,10 +181,9 @@ public class GameManagerScript : MonoBehaviour
     public void AddMoveCounter()
     {
         movecounter++;
-
+        MovesLabelUi.GetComponent<TextMeshProUGUI>().text = movecounter + " Moves";
     }
     /// <summary>
-    /// 
     /// 
     /// </summary>
     void InstantiateLevel()
@@ -236,11 +287,42 @@ public class GameManagerScript : MonoBehaviour
             if (levelSelected < levels.Count - 1)
             {
                 levelTransition = true;
+                PlaySound(2);
             }
             else
             {
                 ChangeGameState(3);
             }
+            
         }
+    }
+    public void TogglePause()
+    {
+        PauseScript[] pause = Resources.FindObjectsOfTypeAll<PauseScript>();
+        if (isPaused)
+        {
+            if (pause[0].gameObject.activeSelf)
+            {
+                Time.timeScale = 1f;
+                pause[0].gameObject.SetActive(false);
+                isPaused = false;
+            }
+        }
+        else
+        {
+            Time.timeScale = 0f;
+            pause[0].gameObject.SetActive(true);
+            GameObject.Find("ResumeButton").GetComponent<Button>().Select();
+            isPaused = true;
+        }
+    }
+    /// <summary>
+    /// Joue les sons du jeu
+    /// </summary>
+    /// <param name="soundID">0-Lazer sound,1-Menu sound,2-player Death, 3- Enemy death</param>
+    public void PlaySound(int soundID)
+    {
+        
+        audioSources[soundID].Play();
     }
 }

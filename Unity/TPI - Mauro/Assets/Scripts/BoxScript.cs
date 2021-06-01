@@ -128,6 +128,7 @@ public class BoxScript : MonoBehaviour
                 }
                 break;
         }
+        if (isMoving) gameManager.PlaySound(1);
         return isMoving;
     }
     public bool ForcePush(string direction)
@@ -171,6 +172,7 @@ public class BoxScript : MonoBehaviour
 
                 break;
         }
+        if (isMoving) gameManager.PlaySound(1);
         return isMoving;
     }
     public void AddCollision(string side, int item)

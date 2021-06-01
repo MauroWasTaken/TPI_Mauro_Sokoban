@@ -150,7 +150,8 @@ public class CharacterScript : MonoBehaviour
         animator.SetTrigger("IsRunning");
         isRunning = true;
         runningTimer = 0;
-        //gameManager.AddMoveCounter();
+        gameManager.PlaySound(0);
+        gameManager.AddMoveCounter();
     }
     public void Move(string direction)
     {
