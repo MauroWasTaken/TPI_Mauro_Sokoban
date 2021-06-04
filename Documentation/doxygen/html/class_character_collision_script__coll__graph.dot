@@ -1,0 +1,18 @@
+digraph "CharacterCollisionScript"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="CharacterCollisionScript",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="MonoBehaviour",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node3 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" character" ,fontname="Helvetica"];
+  Node3 [label="CharacterScript",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_character_script.html",tooltip="script du personnage principal"];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" gameManager" ,fontname="Helvetica"];
+  Node4 [label="GameManagerScript",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_game_manager_script.html",tooltip="script du gameManager"];
+  Node2 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 -> Node4 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" gameCamera" ,fontname="Helvetica"];
+  Node5 [label="CameraScript",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_camera_script.html",tooltip="Script utilisé pour la camera"];
+  Node2 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

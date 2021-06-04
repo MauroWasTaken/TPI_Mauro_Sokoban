@@ -1,0 +1,30 @@
+digraph "Graphical Class Hierarchy"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node2 [label="MonoBehaviour",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node2 -> Node0 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node0 [label="BoxCollisionScript",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_box_collision_script.html",tooltip=" "];
+  Node2 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="BoxScript",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_box_script.html",tooltip=" "];
+  Node2 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="CameraScript",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_camera_script.html",tooltip="Script utilisé pour la camera"];
+  Node2 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="CharacterCollisionScript",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_character_collision_script.html",tooltip=" "];
+  Node2 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="CharacterScript",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_character_script.html",tooltip="script du personnage principal"];
+  Node2 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="GameManagerScript",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_game_manager_script.html",tooltip="script du gameManager"];
+  Node2 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="MainMenuScript",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_main_menu_script.html",tooltip="classe qui gere le menu principal du jeu"];
+  Node2 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="OptionsScript",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_options_script.html",tooltip="Classe qui gere le menu options"];
+  Node2 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="PauseScript",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_pause_script.html",tooltip="classe qui gere le menu pause"];
+  Node2 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="TeleporterCollisionScript",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_teleporter_collision_script.html",tooltip=" "];
+  Node2 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="TeleporterScript",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_teleporter_script.html",tooltip=" "];
+}

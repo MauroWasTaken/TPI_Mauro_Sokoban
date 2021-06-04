@@ -50,6 +50,9 @@ public class BoxScript : MonoBehaviour
     {
         Mouvement();
     }
+    /// <summary>
+    /// script qui gere le deplacement de la boite
+    /// </summary>
     void Mouvement()
     {
         if (isMoving)
@@ -66,6 +69,10 @@ public class BoxScript : MonoBehaviour
         }
         movingTimer += Time.deltaTime;
     }
+    /// <summary>
+    /// reset l'etat des colliders apres un déplacement
+    /// </summary>
+    /// <param name="status">true-active les colliders / false les desactive</param>
     void SetColliders(bool status)
     {
         foreach (GameObject collider in colliders)
@@ -79,6 +86,11 @@ public class BoxScript : MonoBehaviour
         UpCollision = 0;
 
     }
+    /// <summary>
+    /// déplace la boite en regardant les differentes collisions
+    /// </summary>
+    /// <param name="direction">direction du déplacement de la boite</param>
+    /// <returns>retourne true si c'est une déplacement valable</returns>
     public bool Push(string direction)
     {
         switch (direction)
@@ -131,6 +143,11 @@ public class BoxScript : MonoBehaviour
         if (isMoving) gameManager.PlaySound(1);
         return isMoving;
     }
+    /// <summary>
+    /// permets de pousser une boite sans regarder les collision (implementer à cause d'un bug avec les téléporteurs)
+    /// </summary>
+    /// <param name="direction">direction du déplacement de la boite</param>
+    /// <returns>retourne true si c'est une direction juste</returns>
     public bool ForcePush(string direction)
     {
         switch (direction)
@@ -175,6 +192,11 @@ public class BoxScript : MonoBehaviour
         if (isMoving) gameManager.PlaySound(1);
         return isMoving;
     }
+    /// <summary>
+     /// fonction appelée quand un item entre dans un collider
+     /// </summary>
+     /// <param name="side">cote de la collision</param>
+     /// <param name="item">item qui a fait collision</param>
     public void AddCollision(string side, int item)
     {
         switch (side)
@@ -199,6 +221,10 @@ public class BoxScript : MonoBehaviour
                 break;
         }
     }
+    /// <summary>
+    /// fonction appelée quand un item sors dans un collider
+    /// </summary>
+    /// <param name="side">cote de la collision</param>
     public void RemoveCollision(string side)
     {
         switch (side)

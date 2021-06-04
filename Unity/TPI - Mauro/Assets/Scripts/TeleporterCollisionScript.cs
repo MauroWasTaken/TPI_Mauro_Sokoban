@@ -6,6 +6,9 @@ public class TeleporterCollisionScript : MonoBehaviour
 {
     [SerializeField]
     TeleporterScript teleporter;
+    /// <summary>
+    /// fonction appelée quand un item entre dans un collider
+    /// </summary>
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer >= 6)
@@ -16,6 +19,9 @@ public class TeleporterCollisionScript : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// fonction appelée quand un item sors dans un collider
+    /// </summary>
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer >= 6)

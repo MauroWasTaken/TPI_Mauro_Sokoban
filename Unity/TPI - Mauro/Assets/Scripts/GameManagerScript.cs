@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine.UI;
-
+/// <summary>
+/// script du gameManager
+/// </summary>
 public class GameManagerScript : MonoBehaviour
 {
     private int gameState = 1;
@@ -46,8 +48,6 @@ public class GameManagerScript : MonoBehaviour
     //sound management
     [SerializeField]
     private AudioSource[] audioSources;
-    [SerializeField]
-    private AudioClip[] audioClips;
     //getters
     public bool RestartLevel { set { restartLevel = value; } }
     public int GameState { get => gameState; } 
@@ -61,20 +61,16 @@ public class GameManagerScript : MonoBehaviour
     void Start()
     {
         ChangeGameState(1);
-        int index = 0;
-        foreach(AudioSource audioSource in audioSources)
-        {
-            audioSources[index].clip = audioClips[index];
-            index++;
-        }
     }
-
+    /// <summary>
+    /// fonction qui me permet de changer le statut du jeu 
+    /// </summary>
+    /// <param name="stateToChange">1 - menu principal, 2 - jeu , 3 - Gameover</param>
     public void ChangeGameState(int stateToChange)
     {
         clearGameObjects();
         switch (stateToChange)
         {
-            
             case 2:
                 try
                 {
@@ -99,15 +95,11 @@ public class GameManagerScript : MonoBehaviour
         }
         gameState = stateToChange;
     }
+    /// <summary>
+    /// Fonction qui supprime tous les games objects utilisés à un seul gamestate
+    /// </summary>
     private void clearGameObjects()
     {
-        mainMenuUi.SetActive(false);
-
-        Time.timeScale = 1f;
-        isPaused = false;
-        pauseMenuUi.SetActive(false);
-
-
         gameCamera.Player = null;
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
         foreach (GameObject singleObject in allObjects)
@@ -117,6 +109,11 @@ public class GameManagerScript : MonoBehaviour
                 Destroy(singleObject);
             }
         }
+        Time.timeScale = 1f;
+        isPaused = false;
+        pauseMenuUi.SetActive(false);
+
+        mainMenuUi.SetActive(false);
         levelUi.SetActive(false);
         GameOverUi.SetActive(false);
     }
@@ -129,6 +126,9 @@ public class GameManagerScript : MonoBehaviour
         UpdateGameState();
         
     }
+    /// <summary>
+    /// Fonction appelée par la fonction update permettant d'avoir un comportement different en fonction du game status
+    /// </summary>
     private void UpdateGameState()
     {
         switch (gameState)
@@ -178,13 +178,16 @@ public class GameManagerScript : MonoBehaviour
         }
 
     }
+    /// <summary>
+    /// Fonction appelée par je personnage principal qui incremente ne compteur de pas 
+    /// </summary>
     public void AddMoveCounter()
     {
         movecounter++;
         MovesLabelUi.GetComponent<TextMeshProUGUI>().text = movecounter + " Moves";
     }
     /// <summary>
-    /// 
+    /// Fonction qu'instantie les elements d'un niveau dans les bons endroits
     /// </summary>
     void InstantiateLevel()
     {
@@ -253,7 +256,7 @@ public class GameManagerScript : MonoBehaviour
         }
     }
     /// <summary>
-    /// 
+    /// Charge les differents niveaux depuis les fichiers csv
     /// </summary>
     void LoadLevels()
     {
@@ -279,6 +282,10 @@ public class GameManagerScript : MonoBehaviour
             levels.Add(new Level(formatedData));
         }
     }
+    /// <summary>
+    /// fonction appellée quand une boite interagit avec un point vert
+    /// </summary>
+    /// <param name="value">+1 pour quand la boite entre,-1 quand la boite sort</param>
     public void BoxOnSpot(int value)
     {
         boxesOnSpot += value;
@@ -296,6 +303,9 @@ public class GameManagerScript : MonoBehaviour
             
         }
     }
+    /// <summary>
+    /// fonction qui mets/enleve la pause du jeu
+    /// </summary>
     public void TogglePause()
     {
         PauseScript[] pause = Resources.FindObjectsOfTypeAll<PauseScript>();
@@ -319,7 +329,7 @@ public class GameManagerScript : MonoBehaviour
     /// <summary>
     /// Joue les sons du jeu
     /// </summary>
-    /// <param name="soundID">0-Lazer sound,1-Menu sound,2-player Death, 3- Enemy death</param>
+    /// <param name="soundID">0- marche du personnage, 1-deplacement de la boite, 2 - Fin de niveau</param>
     public void PlaySound(int soundID)
     {
         

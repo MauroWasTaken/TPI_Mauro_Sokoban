@@ -14,6 +14,9 @@ public class TeleporterScript : MonoBehaviour
     {
         cooldownTimer += Time.deltaTime;
     }
+    /// <summary>
+    /// fonction appelée quand un item entre dans le téléporteur
+    /// </summary>
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.name.Contains("Up")| other.gameObject.name.Contains("character"))
@@ -26,6 +29,11 @@ public class TeleporterScript : MonoBehaviour
         }
 
     }
+    /// <summary>
+    /// fonction qui teleporte un item dans un autre téléporteur
+    /// </summary>
+    /// <param name="item">item à téléporter</param>
+    /// <returns>returs true si c'est une téléportation valide</returns>
     private bool Teleport(GameObject item)
     {
         char direction;
@@ -198,6 +206,10 @@ public class TeleporterScript : MonoBehaviour
                 break;
         }
     }
+    /// <summary>
+    /// permets de lier le téléporteur avec un autre
+    /// </summary>
+    /// <param name="teleporter">téléporteur à lier</param>
     public void LinkToTeleporter(GameObject teleporter)
     {
         if (teleporter.layer == 10)

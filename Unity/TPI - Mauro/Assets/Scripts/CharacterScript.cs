@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// script du personnage principal
+/// </summary>
 public class CharacterScript : MonoBehaviour
 {
     char lastmove;
@@ -30,6 +32,9 @@ public class CharacterScript : MonoBehaviour
         Mouvement();
         runningTimer += Time.deltaTime;
     }
+    /// <summary>
+    /// script qui gere le deplacement du personnage
+    /// </summary>
     void Mouvement()
     {
         if (isRunning)
@@ -144,6 +149,9 @@ public class CharacterScript : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// change certaines variables si le déplacement est valable
+    /// </summary>
     void validMove()
     {
         SetColliders(false);
@@ -153,6 +161,10 @@ public class CharacterScript : MonoBehaviour
         gameManager.PlaySound(0);
         gameManager.AddMoveCounter();
     }
+    /// <summary>
+    /// fonction qui permet aux teleporteurs de déplacer le joueur
+    /// </summary>
+    /// <param name="direction"></param>
     public void Move(string direction)
     {
         switch (direction)
@@ -184,6 +196,10 @@ public class CharacterScript : MonoBehaviour
         }
 
     }
+    /// <summary>
+    /// refresh l'état des colliders apres un déplacement
+    /// </summary>
+    /// <param name="status">true-active les colliders / false les desactive</param>
     void SetColliders(bool status)
     {
         foreach (GameObject collider in colliders)
@@ -198,6 +214,11 @@ public class CharacterScript : MonoBehaviour
             eastCollision = null;
         }
     }
+    /// <summary>
+    /// fonction appelée quand un item entre dans un collider
+    /// </summary>
+    /// <param name="side">cote de la collision</param>
+    /// <param name="item">item qui a fait collision</param>
     public void AddCollision(string side, Collider item)
     {
 
